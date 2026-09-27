@@ -1,8 +1,8 @@
-module Math.Dihedron.Subalgebras
+module Stage1.Subalgebras
 
-import public Math.Dihedron.Dihedron
-import Math.Infinitesimal
-import Core.VexelMaxel
+import public Stage1.Dihedron
+import Transform
+import Stage1.VexelMaxel
 
 %default total
 
@@ -41,5 +41,5 @@ toDihedronGreen (MkGreen r d) = MkDihedron r 0 0 d
 
 ||| Conversion from Maxel Dual Number (where ε² = 0) to Green Degenerate Sub-algebra.
 public export
-fromMaxelDualNumber : Maxel -> GreenComplex
+fromMaxelDualNumber : Stage1.VexelMaxel.Maxel -> GreenComplex
 fromMaxelDualNumber m = MkGreen (dualReal m) (dualEps m)

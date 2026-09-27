@@ -1,10 +1,10 @@
 module Main
 
 import QuickCheck
-import Core.BoxInt
-import Math.Multiset
+import Stage0.BoxInt
+import Stage0.Multiset
 import Math.Infinitesimal
-import Core.VexelMaxel
+import Stage1.VexelMaxel
 import Math.Dihedron.Dihedron
 import Math.Dihedron.Subalgebras
 

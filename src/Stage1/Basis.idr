@@ -1,7 +1,7 @@
-module Math.Dihedron.Basis
+module Stage1.Basis
 
-import public Math.Multiset
-import public Core.BoxInt
+import public Stage0.Multiset
+import public Stage0.BoxInt
 
 %default total
 

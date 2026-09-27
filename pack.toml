@@ -1,12 +1,7 @@
-[custom.all.idris2-Dihedron]
+[custom.all.FinSc-Dihedron]
 type = "local"
 path = "."
-ipkg = "idris2-Dihedron.ipkg"
-
-[custom.all.idris2-Dihedron-test]
-type = "local"
-path = "."
-ipkg = "idris2-Dihedron-test.ipkg"
+ipkg = "FinSc-Dihedron.ipkg"
 
 [custom.all.FinSc-Multiset-Core]
 type = "local"

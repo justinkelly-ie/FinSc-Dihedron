@@ -1,11 +1,12 @@
 package FinSc-Dihedron
-version = 0.2.0
+version = 0.3.0
 authors = "Justin"
 
 depends = base, linear, FinSc-Multiset-Core, FinSc-Multiset-Transform
 sourcedir = "src"
 
-modules = Math.Dihedron.Basis,
-          Math.Dihedron.Dihedron,
-          Math.Dihedron.Subalgebras
-
+modules = Dihedron,
+          Stage0.DihedronStream,
+          Stage1.Basis,
+          Stage1.Dihedron,
+          Stage1.Subalgebras

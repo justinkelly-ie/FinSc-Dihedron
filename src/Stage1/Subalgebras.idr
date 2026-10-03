@@ -1,7 +1,7 @@
 module Stage1.Subalgebras
 
 import public Stage1.Dihedron
-import Transform
+import PhaseUnfolding
 import Stage1.VexelMaxel
 
 %default total

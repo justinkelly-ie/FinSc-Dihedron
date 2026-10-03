@@ -9,4 +9,5 @@ modules = Dihedron,
           Stage0.DihedronStream,
           Stage1.Basis,
           Stage1.Dihedron,
+          Stage1.DihedralRepIso,
           Stage1.Subalgebras

@@ -3,10 +3,9 @@ module Main
 import QuickCheck
 import Stage0.BoxInt
 import Stage0.Multiset
-import Math.Infinitesimal
+import Stage1.Math.Infinitesimal
 import Stage1.VexelMaxel
-import Math.Dihedron.Dihedron
-import Math.Dihedron.Subalgebras
+import Dihedron
 
 %default total
 

@@ -1,13 +1,9 @@
 package FinSc-Dihedron-test
-version = 0.2.0
+version = 0.3.0
 authors = "Justin"
 
-depends = base, linear, FinSc-Multiset-Core, FinSc-Multiset-Transform
-sourcedir = "src"
-
-modules = Math.Dihedron.Basis,
-          Math.Dihedron.Dihedron,
-          Math.Dihedron.Subalgebras
+depends = base, linear, FinSc-Multiset-Core, FinSc-Multiset-Transform, FinSc-Dihedron, idris2-QuickCheck
+sourcedir = "test"
 
 main = Main
 executable = dihedrontest

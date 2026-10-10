@@ -10,4 +10,5 @@ modules = Dihedron,
           Stage1.Basis,
           Stage1.Dihedron,
           Stage1.DihedralRepIso,
-          Stage1.Subalgebras
+          Stage1.Subalgebras,
+          Stage1.DiracSpinor

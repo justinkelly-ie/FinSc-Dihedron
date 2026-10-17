@@ -38,6 +38,12 @@ fusedDihedralActionStreamNat fuel steps =
     (MkDihedron (intToBoxInt 1) (intToBoxInt 0) (intToBoxInt 0) (intToBoxInt 0))
     (1, steps)
 
+||| O(1) allocation deforested stream transducer folding product of Dihedrons across a stream using model-indexed GohFuel.
+public export
+fusedDihedralActionStreamFuelModel : GohFuel cap -> List Dihedron -> Dihedron
+fusedDihedralActionStreamFuelModel fuel steps =
+  fusedDihedralActionStreamNat (gohSteps fuel) steps
+
 ||| O(1) allocation deforested stream transducer folding product of Dihedrons across a stream using BoxNat fuel.
 public export
 fusedDihedralActionStreamBoxNat : BoxNat -> List Dihedron -> Dihedron
@@ -48,7 +54,7 @@ fusedDihedralActionStreamBoxNat bfuel steps =
 public export
 fusedDihedralActionStream : Fuel -> List Dihedron -> Dihedron
 fusedDihedralActionStream (More f) steps =
-  fusedDihedralActionStreamNat (boxNatToNat (gohFuel (length steps))) steps
+  fusedDihedralActionStreamNat (gohSteps (gohFuelForCapacity (length steps))) steps
 fusedDihedralActionStream Dry _ = MkDihedron (intToBoxInt 1) (intToBoxInt 0) (intToBoxInt 0) (intToBoxInt 0)
 
 ||| O(1) allocation deforested stream transducer evaluating total sum of quadrances across a Dihedron stream using total structural Nat fuel.
@@ -63,6 +69,12 @@ fusedComputeTotalQuadranceNat fuel steps =
     (intToBoxInt 0)
     (1, steps)
 
+||| O(1) allocation deforested stream transducer evaluating total sum of quadrances across a Dihedron stream using model-indexed GohFuel.
+public export
+fusedComputeTotalQuadranceFuelModel : GohFuel cap -> List Dihedron -> BoxInt
+fusedComputeTotalQuadranceFuelModel fuel steps =
+  fusedComputeTotalQuadranceNat (gohSteps fuel) steps
+
 ||| O(1) allocation deforested stream transducer evaluating total sum of quadrances across a Dihedron stream using BoxNat fuel.
 public export
 fusedComputeTotalQuadranceBoxNat : BoxNat -> List Dihedron -> BoxInt
@@ -73,7 +85,7 @@ fusedComputeTotalQuadranceBoxNat bfuel steps =
 public export
 fusedComputeTotalQuadrance : Fuel -> List Dihedron -> BoxInt
 fusedComputeTotalQuadrance (More f) steps =
-  fusedComputeTotalQuadranceNat (boxNatToNat (gohFuel (length steps))) steps
+  fusedComputeTotalQuadranceNat (gohSteps (gohFuelForCapacity (length steps))) steps
 fusedComputeTotalQuadrance Dry _ = intToBoxInt 0
 
 ------------------------------------------------------------------------
@@ -149,12 +161,18 @@ public export
 fusedComputePauliPathPropagatorBoxNat : BoxNat -> PauliSpinor -> List Dihedron -> PauliSpinor
 fusedComputePauliPathPropagatorBoxNat bfuel = fusedComputePauliPathPropagatorNat (boxNatToNat bfuel)
 
+||| Evaluates multi-step Feynman path propagator composition over Pauli spin-1/2 state vectors using model-indexed GohFuel.
+public export
+fusedComputePauliPathPropagatorFuelModel : GohFuel cap -> PauliSpinor -> List Dihedron -> PauliSpinor
+fusedComputePauliPathPropagatorFuelModel fuel initialSpinor pathSteps =
+  fusedComputePauliPathPropagatorNat (gohSteps fuel) initialSpinor pathSteps
+
 ||| Evaluates multi-step Feynman path propagator composition over Pauli spin-1/2 state vectors
 ||| using a fused stream transducer in O(1) auxiliary space without list allocations.
 public export
 fusedComputePauliPathPropagator : Fuel -> PauliSpinor -> List Dihedron -> PauliSpinor
 fusedComputePauliPathPropagator (More f) initialSpinor pathSteps =
-  fusedComputePauliPathPropagatorNat (boxNatToNat (gohFuel (length pathSteps))) initialSpinor pathSteps
+  fusedComputePauliPathPropagatorNat (gohSteps (gohFuelForCapacity (length pathSteps))) initialSpinor pathSteps
 fusedComputePauliPathPropagator Dry initialSpinor _ = initialSpinor
 
 ||| Evaluates total path quadrance norm across a multi-step Pauli Feynman path using total structural Nat fuel.
@@ -163,6 +181,12 @@ fusedComputePauliPathQuadranceNat : Nat -> PauliSpinor -> List Dihedron -> BoxIn
 fusedComputePauliPathQuadranceNat fuel initialSpinor pathSteps =
   let finalSpinor = fusedComputePauliPathPropagatorNat fuel initialSpinor pathSteps
   in quadranceDihedron (spinUp finalSpinor) + quadranceDihedron (spinDown finalSpinor)
+
+||| Evaluates total path quadrance norm across a multi-step Pauli Feynman path using model-indexed GohFuel.
+public export
+fusedComputePauliPathQuadranceFuelModel : GohFuel cap -> PauliSpinor -> List Dihedron -> BoxInt
+fusedComputePauliPathQuadranceFuelModel fuel initialSpinor pathSteps =
+  fusedComputePauliPathQuadranceNat (gohSteps fuel) initialSpinor pathSteps
 
 ||| Evaluates total path quadrance norm across a multi-step Pauli Feynman path using BoxNat fuel.
 public export
@@ -173,7 +197,7 @@ fusedComputePauliPathQuadranceBoxNat bfuel = fusedComputePauliPathQuadranceNat (
 public export
 fusedComputePauliPathQuadrance : Fuel -> PauliSpinor -> List Dihedron -> BoxInt
 fusedComputePauliPathQuadrance (More f) initialSpinor pathSteps =
-  fusedComputePauliPathQuadranceNat (boxNatToNat (gohFuel (length pathSteps))) initialSpinor pathSteps
+  fusedComputePauliPathQuadranceNat (gohSteps (gohFuelForCapacity (length pathSteps))) initialSpinor pathSteps
 fusedComputePauliPathQuadrance Dry initialSpinor _ =
   quadranceDihedron (spinUp initialSpinor) + quadranceDihedron (spinDown initialSpinor)
 
@@ -185,9 +209,9 @@ auditPauliPathPropagatorProof =
       uPhase1 = MkDihedron 0 1 0 0 -- i phase
       uPhase2 = MkDihedron 0 1 0 0 -- i phase (i * i = -1)
       phases = [uPhase1, uPhase2]
-      fuel = boxNatToNat (gohFuel (length phases))
-      finalSpinor = fusedComputePauliPathPropagatorNat fuel initialSpinor phases
-      totalQuad = fusedComputePauliPathQuadranceNat fuel initialSpinor phases
+      fuel = gohFuelForCapacity (length phases)
+      finalSpinor = fusedComputePauliPathPropagatorFuelModel fuel initialSpinor phases
+      totalQuad = fusedComputePauliPathQuadranceFuelModel fuel initialSpinor phases
       expectedSpinUp = MkDihedron (-1) 0 0 0
       expectedSpinDown = MkDihedron 0 (-1) 0 0
   in spinUp finalSpinor == expectedSpinUp &&

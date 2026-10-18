@@ -22,10 +22,10 @@ zeroDihedron = MkDihedron (MkBoxInt 0) (MkBoxInt 0) (MkBoxInt 0) (MkBoxInt 0)
 public export
 dihedronEq : Dihedron -> Dihedron -> Bool
 dihedronEq (MkDihedronVal a1 b1 c1 d1) (MkDihedronVal a2 b2 c2 d2) =
-  (unwrapBox a1 == unwrapBox a2) &&
-  (unwrapBox b1 == unwrapBox b2) &&
-  (unwrapBox c1 == unwrapBox c2) &&
-  (unwrapBox d1 == unwrapBox d2)
+  (a1 == a2) &&
+  (b1 == b2) &&
+  (c1 == c2) &&
+  (d1 == d2)
 
 ||| Canonical Representation Isomorphism for Layer 3 Metrical Geometry.
 public export

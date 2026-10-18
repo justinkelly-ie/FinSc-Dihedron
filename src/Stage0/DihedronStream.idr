@@ -170,5 +170,5 @@ auditPauliPathPropagatorProof =
       expectedSpinDown = MkDihedron 0 (-1) 0 0
   in spinUp finalSpinor == expectedSpinUp &&
      spinDown finalSpinor == expectedSpinDown &&
-     unwrapBox totalQuad == 2
+     totalQuad == intToBoxInt 2
 

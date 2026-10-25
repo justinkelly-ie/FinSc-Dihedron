@@ -2,7 +2,7 @@ module Stage1.Subalgebras
 
 import public Stage1.Dihedron
 import PhaseUnfolding
-import Stage1.VexelMaxel
+import Stage1.Carrier.Maxel
 
 %default total
 
@@ -41,5 +41,5 @@ toDihedronGreen (MkGreen r d) = MkDihedron r 0 0 d
 
 ||| Conversion from Maxel Dual Number (where ε² = 0) to Green Degenerate Sub-algebra.
 public export
-fromMaxelDualNumber : Stage1.VexelMaxel.Maxel -> GreenComplex
+fromMaxelDualNumber : Maxel -> GreenComplex
 fromMaxelDualNumber m = MkGreen (dualReal m) (dualEps m)

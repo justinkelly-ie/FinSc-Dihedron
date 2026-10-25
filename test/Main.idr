@@ -4,7 +4,7 @@ import QuickCheck
 import Stage0.BoxInt
 import Stage0.Multiset
 import Stage1.Math.Infinitesimal
-import Stage1.VexelMaxel
+import Stage1.Carrier.Maxel
 import Dihedron
 
 %default total

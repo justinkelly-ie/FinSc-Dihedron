@@ -2,7 +2,7 @@ module Stage1.Subalgebras
 
 import public Stage1.Dihedron
 import PhaseUnfolding
-import Stage1.Carrier.Maxel
+import Stage1.Basis.Coordinate
 
 %default total
 

@@ -96,6 +96,37 @@ public export
 spinorQuadrance : DiracSpinor -> BoxInt
 spinorQuadrance (MkDiracSpinor a b c d) = (a * a) + (b * b) - (c * c) - (d * d)
 
+||| Right-handed chiral projector P_R: projects onto positive chirality components (a, b, 0, 0).
+public export
+projectorR : DiracSpinor -> DiracSpinor
+projectorR (MkDiracSpinor a b _ _) = MkDiracSpinor a b (intToBoxInt 0) (intToBoxInt 0)
+
+||| Left-handed chiral projector P_L: projects onto negative chirality components (0, 0, c, d).
+public export
+projectorL : DiracSpinor -> DiracSpinor
+projectorL (MkDiracSpinor _ _ c d) = MkDiracSpinor (intToBoxInt 0) (intToBoxInt 0) c d
+
+||| Componentwise addition of two Dirac Spinors.
+public export
+addSpinor : DiracSpinor -> DiracSpinor -> DiracSpinor
+addSpinor (MkDiracSpinor a1 b1 c1 d1) (MkDiracSpinor a2 b2 c2 d2) =
+  MkDiracSpinor (a1 + a2) (b1 + b2) (c1 + c2) (d1 + d2)
+
+||| Audits Chiral Projector Completeness (P_L + P_R = I), Idempotency (P^2 = P), and Orthogonality (P_L P_R = 0).
+public export
+auditChiralProjectorCompletenessProof : Bool
+auditChiralProjectorCompletenessProof =
+  let psi = MkDiracSpinor (intToBoxInt 1) (intToBoxInt 2) (intToBoxInt 3) (intToBoxInt 4)
+      pL = projectorL psi
+      pR = projectorR psi
+      comp = addSpinor pL pR
+      zeroS = MkDiracSpinor (intToBoxInt 0) (intToBoxInt 0) (intToBoxInt 0) (intToBoxInt 0)
+  in comp == psi &&
+     projectorR pR == pR &&
+     projectorL pL == pL &&
+     projectorR pL == zeroS &&
+     projectorL pR == zeroS
+
 ||| Proof witness that Dihedron quadrance equals Dirac Spinor quadrance.
 public export
 0 prfDihedronSpinorQuadranceEquiv : (d : Dihedron) -> quadranceDihedron d = spinorQuadrance (dihedronToSpinor d)

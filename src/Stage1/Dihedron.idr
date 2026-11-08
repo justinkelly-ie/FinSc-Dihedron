@@ -27,22 +27,6 @@ MkDihedron : BoxInt -> BoxInt -> BoxInt -> BoxInt -> Dihedron
 MkDihedron a b c d = MkDihedronVal a b c d
 
 public export
-a : DihedronVal scalar -> scalar
-a (MkDihedronVal s _ _ _) = s
-
-public export
-b : DihedronVal scalar -> scalar
-b (MkDihedronVal _ bl _ _) = bl
-
-public export
-c : DihedronVal scalar -> scalar
-c (MkDihedronVal _ _ r _) = r
-
-public export
-d : DihedronVal scalar -> scalar
-d (MkDihedronVal _ _ _ g) = g
-
-public export
 (Eq scalar) => Eq (DihedronVal scalar) where
   (MkDihedronVal a1 b1 c1 d1) == (MkDihedronVal a2 b2 c2 d2) =
     (a1 == a2) && (b1 == b2) && (c1 == c2) && (d1 == d2)

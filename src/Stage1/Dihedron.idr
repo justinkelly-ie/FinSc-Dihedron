@@ -3,6 +3,7 @@ module Stage1.Dihedron
 import public Stage1.Basis
 import public Stage0.BoxInt
 import public Stage0.Multiset
+import public Stage0.Interfaces
 import Stage1.TypeTheory.Staging
 import Stage1.TypeTheory.TwoLevel
 
@@ -144,6 +145,21 @@ public export
 Neg Dihedron where
   negate = negDihedron
   (-) = subDihedron
+
+public export
+MultisetAlgebra Dihedron where
+  zeroM = MkDihedron 0 0 0 0
+  addM = addDihedron
+  subM = subDihedron
+  scaleM = scaleDihedron
+  mulM = mulDihedron
+  hadamardM (MkDihedronVal a1 b1 c1 d1) (MkDihedronVal a2 b2 c2 d2) =
+    MkDihedronVal (a1 * a2) (b1 * b2) (c1 * c2) (d1 * d2)
+  minM (MkDihedronVal a1 b1 c1 d1) (MkDihedronVal a2 b2 c2 d2) =
+    MkDihedronVal (min a1 a2) (min b1 b2) (min c1 c2) (min d1 d2)
+  maxM (MkDihedronVal a1 b1 c1 d1) (MkDihedronVal a2 b2 c2 d2) =
+    MkDihedronVal (max a1 a2) (max b1 b2) (max c1 c2) (max d1 d2)
+  dotM = bilinearDihedron
 
 ------------------------------------------------------------------------
 -- 2. COMPILE-TIME DIHEDRAL SYMMETRY WITNESSES

@@ -1,8 +1,9 @@
 package FinSc-Dihedron
 version = 0.3.0
-authors = "Justin"
+authors = "Justin Kelly"
+brief   = "Layer 5 Split Quaternions, 3D Minkowski Lorentz Group PGL2(Q) & Spinors"
 
-depends = base, linear, FinSc-Multiset, FinSc-Metric-Substrate, FinSc-Phase-Unfolding
+depends = base, linear, FinSc-Multiset, FinSc-Metric-Substrate, FinSc-Phase-Unfolding, FinSc-Radix-Ternary
 sourcedir = "src"
 
 modules = Dihedron,
@@ -12,4 +13,5 @@ modules = Dihedron,
           Stage1.DihedralRepIso,
           Stage1.Subalgebras,
           Stage1.DiracSpinor,
-          Stage1.ProjectiveDihedron
+          Stage1.ProjectiveDihedron,
+          Stage1.TernaryDihedron

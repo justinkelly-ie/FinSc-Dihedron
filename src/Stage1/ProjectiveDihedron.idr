@@ -5,6 +5,7 @@ import public Stage0.Multiset
 import public Stage1.Dihedron
 import public Stage1.Basis
 import public Stage1.FourGeometries
+import public Stage1.DihedronModel
 
 %default total
 
@@ -134,6 +135,16 @@ public export
 dihedronNorm : Dihedron -> BoxInt
 dihedronNorm = quadranceDihedron
 
+||| Concrete morphism from DihedronMatrix2x2 to Substrate Dihedron2 stencil (no type aliasing).
+public export
+dihedronMatrixToDihedron2 : DihedronMatrix2x2 -> Dihedron2
+dihedronMatrixToDihedron2 (MkDMat2x2 a b c d) = MkDihedron2 a b c d
+
+||| Concrete morphism from Substrate Dihedron2 stencil to DihedronMatrix2x2 (no type aliasing).
+public export
+dihedron2ToDihedronMatrix : Dihedron2 -> DihedronMatrix2x2
+dihedron2ToDihedronMatrix (MkDihedron2 a b c d) = MkDMat2x2 a b c d
+
 ------------------------------------------------------------------------
 -- 3. PROJECTIVE DIHEDRON PROPORTIONS (Wildberger Section 11.1)
 ------------------------------------------------------------------------
@@ -145,6 +156,16 @@ record ProjectiveDihedron where
   constructor MkProjDihedron
   projScalar : BoxInt          -- x
   projVec    : MinkowskiVector -- v = (t, r, s)
+
+public export
+Eq ProjectiveDihedron where
+  (MkProjDihedron x1 v1) == (MkProjDihedron x2 v2) =
+    (x1 == x2) && (v1 == v2)
+
+public export
+Show ProjectiveDihedron where
+  show (MkProjDihedron x v) =
+    "ProjDihedron(" ++ show x ++ " : " ++ show v ++ ")"
 
 public export
 dihedronToProj : Dihedron -> ProjectiveDihedron

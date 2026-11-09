@@ -82,7 +82,7 @@ mulDihedron : Dihedron -> Dihedron -> Dihedron
 mulDihedron (MkDihedronVal a1 b1 c1 d1) (MkDihedronVal a2 b2 c2 d2) =
   let resA = (a1 * a2) - (b1 * b2) + (c1 * c2) + (d1 * d2)
       resB = (a1 * b2) + (b1 * a2) + (c1 * d2) - (d1 * c2)
-      resC = (a1 * c2) + (c1 * a2) - (b1 * d2) + (d1 * b2)
+      resC = (a1 * c2) + (c1 * a2) + (b1 * d2) - (d1 * b2)
       resD = (a1 * d2) + (d1 * a2) - (b1 * c2) + (c1 * b2)
   in MkDihedronVal resA resB resC resD
 

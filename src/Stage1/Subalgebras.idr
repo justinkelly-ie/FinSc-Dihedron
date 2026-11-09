@@ -39,7 +39,51 @@ public export
 toDihedronGreen : GreenComplex -> Dihedron
 toDihedronGreen (MkGreen r d) = MkDihedron r 0 0 d
 
-||| Conversion from Maxel Dual Number (where ε² = 0) to Green Degenerate Sub-algebra.
+||| Parabolic Nilpotent Sub-algebra C_p(F) = {a·1 + b·ε | ε² = 0, det = 0}
+public export
+record ParabolicDual where
+  constructor MkParabolicDual
+  real : BoxInt
+  eps  : BoxInt
+
+public export
+toParabolicDual : Maxel -> ParabolicDual
+toParabolicDual m = MkParabolicDual (dualReal m) (dualEps m)
+
+public export
+fromParabolicDual : ParabolicDual -> Maxel
+fromParabolicDual (MkParabolicDual r e) = dualNumber r e
+
+||| Canonical Nilpotent Infinitesimal Element in the Dihedron algebra:
+||| ε = (j - i) / 2 = [[0, 1], [0, 0]].
+||| Scaled by 2 as (j - i) for exact integer arithmetic without fraction denominators.
+public export
+epsilonDihedron : Dihedron
+epsilonDihedron = MkDihedron (intToBoxInt 0) (intToBoxInt (-1)) (intToBoxInt 1) (intToBoxInt 0)
+
+||| Audits that ε² = 0 (Grassmann Nilpotency via Dihedron split-quaternion multiplication).
+public export
+auditEpsilonNilpotentProof : Bool
+auditEpsilonNilpotentProof =
+  mulDihedron epsilonDihedron epsilonDihedron == MkDihedron (intToBoxInt 0) (intToBoxInt 0) (intToBoxInt 0) (intToBoxInt 0)
+
+||| Audits that Quadrance Q(ε) = 0 (det = 0, Parabolic null boundary).
+public export
+auditEpsilonQuadranceZeroProof : Bool
+auditEpsilonQuadranceZeroProof =
+  quadranceDihedron epsilonDihedron == intToBoxInt 0
+
+||| Proof witness that ε² = 0 is verified at compile time.
+public export
+0 prfEpsilonNilpotent : Stage1.Subalgebras.auditEpsilonNilpotentProof = True
+prfEpsilonNilpotent = Refl
+
+||| Proof witness that Q(ε) = 0 is verified at compile time.
+public export
+0 prfEpsilonQuadranceZero : Stage1.Subalgebras.auditEpsilonQuadranceZeroProof = True
+prfEpsilonQuadranceZero = Refl
+
+||| Backward-compatibility bridge from Maxel Dual Number to GreenComplex.
 public export
 fromMaxelDualNumber : Maxel -> GreenComplex
 fromMaxelDualNumber m = MkGreen (dualReal m) (dualEps m)

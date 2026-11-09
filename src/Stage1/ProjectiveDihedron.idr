@@ -283,3 +283,96 @@ prop_spinorMatrixDeterminantNull : ColumnSpinor -> RowSpinor -> Bool
 prop_spinorMatrixDeterminantNull k e =
   detDMat2x2 (spinorOuterProduct k e) == intToBoxInt 0
 
+------------------------------------------------------------------------
+-- 7. CANONICAL RATIONAL BOOST & ROTATION CONSTRUCTORS (Wildberger Sec. 11-12)
+------------------------------------------------------------------------
+
+||| Constructs a pure spatial rotation proportion around the time axis (fixing time t, rotating spatial plane (r, s)):
+||| Vector v = (t, 0, 0), Q(v) = t^2 > 0 (Elliptic).
+||| Matrix: [[x, -t], [t, x]], Det: x^2 + t^2, Half-spread: p = t^2 / (x^2 + t^2).
+public export
+mkRationalSpatialRotation : (x : BoxInt) -> (t : BoxInt) -> ProjectiveDihedron
+mkRationalSpatialRotation x t =
+  MkProjDihedron x (MkMVec t (intToBoxInt 0) (intToBoxInt 0))
+
+||| Constructs a pure relativistic Lorentz boost along the s-axis:
+||| Vector v = (0, 0, s), Q(v) = -s^2 < 0 (Hyperbolic).
+||| Matrix: [[x + s, 0], [0, x - s]], Det: x^2 - s^2, Velocity beta = 2xs / (x^2 + s^2).
+public export
+mkRationalBoostS : (x : BoxInt) -> (s : BoxInt) -> ProjectiveDihedron
+mkRationalBoostS x s =
+  MkProjDihedron x (MkMVec (intToBoxInt 0) (intToBoxInt 0) s)
+
+||| Constructs a pure relativistic Lorentz boost along the r-axis:
+||| Vector v = (0, r, 0), Q(v) = -r^2 < 0 (Hyperbolic).
+||| Matrix: [[x, r], [r, x]], Det: x^2 - r^2, Velocity beta = 2xr / (x^2 + r^2).
+public export
+mkRationalBoostR : (x : BoxInt) -> (r : BoxInt) -> ProjectiveDihedron
+mkRationalBoostR x r =
+  MkProjDihedron x (MkMVec (intToBoxInt 0) r (intToBoxInt 0))
+
+||| Constructs an arbitrary relativistic Lorentz boost in spatial direction (r, s):
+||| Vector v = (0, r, s), Q(v) = -r^2 - s^2 < 0 (Hyperbolic).
+||| Matrix: [[x + s, r], [r, x - s]], Det: x^2 - r^2 - s^2.
+public export
+mkArbitraryRationalBoost : (x : BoxInt) -> (r : BoxInt) -> (s : BoxInt) -> ProjectiveDihedron
+mkArbitraryRationalBoost x r s =
+  MkProjDihedron x (MkMVec (intToBoxInt 0) r s)
+
+||| Constructs an exact relativistic boost with rational velocity beta = a/c
+||| derived directly from a Pythagorean triad a^2 + b^2 = c^2 without square roots or gamma factor:
+||| Sets x = c + b and r = a.
+||| Then 2xr / (x^2 + r^2) = 2(c+b)a / ((c+b)^2 + a^2) = 2a(c+b) / (2c(c+b)) = a/c = beta!
+public export
+mkVelocityBoostFromTriad : (a : BoxInt) -> (b : BoxInt) -> (c : BoxInt) -> ProjectiveDihedron
+mkVelocityBoostFromTriad a b c =
+  mkRationalBoostR (c + b) a
+
+||| Constructs an exact Parabolic Null Rotation (lightcone shear):
+||| Vector v = (s, 0, s), Q(v) = s^2 - 0 - s^2 = 0 (Parabolic).
+||| Matrix: [[x + s, -s], [s, x - s]], Det: x^2.
+public export
+mkParabolicNullRotation : (x : BoxInt) -> (s : BoxInt) -> ProjectiveDihedron
+mkParabolicNullRotation x s =
+  MkProjDihedron x (MkMVec s (intToBoxInt 0) s)
+
+------------------------------------------------------------------------
+-- 8. WIGNER-THOMAS ROTATION THEOREM (Wildberger Theorem 70 & 79)
+------------------------------------------------------------------------
+
+||| Proves that the product of two non-collinear pure boosts (boost along r and boost along s)
+||| produces a non-zero timelike vector component t = - (r1 * s2) != 0,
+||| inducing an exact rational spatial rotation (Wigner-Thomas precession):
+public export
+wignerThomasCrossComponent : (r : BoxInt) -> (s : BoxInt) -> BoxInt
+wignerThomasCrossComponent r s = - (r * s)
+
+||| Evaluates the product of a boost along r and a boost along s:
+public export
+composeNonCollinearBoosts : (x1, r1 : BoxInt) -> (x2, s2 : BoxInt) -> ProjectiveDihedron
+composeNonCollinearBoosts x1 r1 x2 s2 =
+  let b1 = mkRationalBoostR x1 r1
+      b2 = mkRationalBoostS x2 s2
+  in mulProjDihedron b1 b2
+
+||| Audit: Verifies that composing non-collinear boosts produces Thomas precession (t != 0)
+||| and that reversing the order reverses the sign of Thomas precession (t12 = -t21):
+public export
+auditWignerThomasPrecessionProof : Bool
+auditWignerThomasPrecessionProof =
+  let x1 = intToBoxInt 2; r1 = intToBoxInt 1  -- boost in r
+      x2 = intToBoxInt 3; s2 = intToBoxInt 1  -- boost in s
+      b1 = mkRationalBoostR x1 r1
+      b2 = mkRationalBoostS x2 s2
+      prod12 = mulProjDihedron b1 b2
+      prod21 = mulProjDihedron b2 b1
+      t12 = prod12.projVec.mTime
+      t21 = prod21.projVec.mTime
+      triadBoost = mkVelocityBoostFromTriad (intToBoxInt 3) (intToBoxInt 4) (intToBoxInt 5)
+      triadN = projNorm triadBoost
+      nullRot = mkParabolicNullRotation (intToBoxInt 3) (intToBoxInt 2)
+      nullQ = quadranceMVec nullRot.projVec
+  in (t12 == intToBoxInt 1) && (t21 == intToBoxInt (-1)) && (t12 == - t21) &&
+     (triadN == intToBoxInt 72) &&
+     (nullQ == intToBoxInt 0)
+

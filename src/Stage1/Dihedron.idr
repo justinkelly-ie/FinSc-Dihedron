@@ -33,6 +33,20 @@ public export
     (a1 == a2) && (b1 == b2) && (c1 == c2) && (d1 == d2)
 
 public export
+(Ord scalar) => Ord (DihedronVal scalar) where
+  compare (MkDihedronVal a1 b1 c1 d1) (MkDihedronVal a2 b2 c2 d2) =
+    case compare a1 a2 of
+      EQ => case compare b1 b2 of
+              EQ => case compare c1 c2 of
+                      EQ => compare d1 d2
+                      o  => o
+              o  => o
+      o  => o
+
+public export
+(Ord scalar) => DiscreteCoord (DihedronVal scalar) where
+
+public export
 (Show scalar) => Show (DihedronVal scalar) where
   show (MkDihedronVal a b c d) =
     show a ++ " + " ++ show b ++ "i + " ++ show c ++ "j + " ++ show d ++ "k"
@@ -193,7 +207,7 @@ record BoundedDihedralState (d : Dihedron) where
 ------------------------------------------------------------------------
 
 ||| Deforested 2LTT staged code generator transducer for hypercomplex Dihedron multiplication.
-%inline public export
+public export
 stagedMulDihedron : Dihedron -> Dihedron -> Code Dihedron
 stagedMulDihedron d1 d2 = quote (mulDihedron d1 d2)
 

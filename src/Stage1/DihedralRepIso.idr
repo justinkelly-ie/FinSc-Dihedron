@@ -32,16 +32,16 @@ public export
 dihedralRepIso : TheoryRepresentationIsomorphism L3_MetricalGeometry Dihedron Dihedron
 dihedralRepIso =
   MkTheoryRepIso
-    "L3: Dihedral Algebra -> Multiset Dihedron"
-    (\d => AddM d (MkBoxInt 1) ZeroM)
+    "L3: Dihedral Algebra -> Carrier Dihedron"
+    (\d => singletonCarrier d (MkBoxInt 1))
     (\m => case m of
-             AddM d _ _ => d
-             ZeroM      => zeroDihedron)
+             BoxNode _ _ d _ _ => d
+             BoxLeaf           => zeroDihedron)
     (\d =>
-      let m = AddM d (MkBoxInt 1) ZeroM
+      let m = singletonCarrier d (MkBoxInt 1)
           d' = case m of
-                 AddM x _ _ => x
-                 ZeroM      => zeroDihedron
+                 BoxNode _ _ x _ _ => x
+                 BoxLeaf           => zeroDihedron
       in dihedronEq d' d
     )
 

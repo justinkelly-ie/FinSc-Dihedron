@@ -67,6 +67,11 @@ public export
 gamma3 : DiracSpinor -> DiracSpinor
 gamma3 (MkDiracSpinor a b c d) = MkDiracSpinor b a (-d) (-c)
 
+||| Fused Gamma-0 . Gamma-3 operator (diag(1, 1, -1, -1) * gamma3), avoiding intermediate spinor allocation and double negation.
+public export
+gamma0Gamma3 : DiracSpinor -> DiracSpinor
+gamma0Gamma3 (MkDiracSpinor a b c d) = MkDiracSpinor b a d c
+
 ||| Square of Gamma-0 preserves spinor up to double negation.
 public export
 gamma0SquareIdentity : DiracSpinor -> DiracSpinor
@@ -84,10 +89,10 @@ gamma0SquareIdentity s = gamma0 (gamma0 s)
 public export
 dihedronToQuadStream : Dihedron -> QuadStreamMultiset BoxInt
 dihedronToQuadStream (MkDihedronVal a b c d) =
-  let eMset = if a == 0 then ZeroM else insertItemBox (intToBoxInt 0) a ZeroM
-      hMset = if b == 0 then ZeroM else insertItemBox (intToBoxInt 1) b ZeroM
-      pMset = if c == 0 then ZeroM else insertItemBox (intToBoxInt 2) c ZeroM
-      sMset = if d == 0 then ZeroM else insertItemBox (intToBoxInt 3) d ZeroM
+  let eMset = if a == 0 then neutral else singletonCarrier (intToBoxInt 0) a
+      hMset = if b == 0 then neutral else singletonCarrier (intToBoxInt 1) b
+      pMset = if c == 0 then neutral else singletonCarrier (intToBoxInt 2) c
+      sMset = if d == 0 then neutral else singletonCarrier (intToBoxInt 3) d
   in MkQuadStream eMset hMset pMset sMset
 
 ||| Calculates the total quadrance norm of a Dirac Spinor matching Dihedron quadrance:

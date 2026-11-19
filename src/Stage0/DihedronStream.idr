@@ -104,7 +104,7 @@ Eq PauliPathToken where
   (MkPauliPathTokenVal i1 p1 s1) == (MkPauliPathTokenVal i2 p2 s2) = i1 == i2 && p1 == p2 && s1 == s2
 
 ||| Unfolds a list of Dihedron phase steps into a deforested PauliPathToken stream.
-%inline public export
+public export
 unfoldPauliPathStream : PauliSpinor -> List Dihedron -> FusedStream PauliPathToken
 unfoldPauliPathStream psi steps = MkStream nextStep (1, psi, steps)
   where
@@ -115,7 +115,7 @@ unfoldPauliPathStream psi steps = MkStream nextStep (1, psi, steps)
       in Yield (MkPauliPathToken idx d nextSpin) (idx + 1, nextSpin, rest)
 
 ||| Deforested stream sifting operator filtering Pauli path tokens without intermediate allocations.
-%inline public export
+public export
 siftPauliPathStream : (PauliPathToken -> Bool) -> FusedStream PauliPathToken -> FusedStream PauliPathToken
 siftPauliPathStream = siftFusedStream
 

@@ -33,7 +33,7 @@ Show ProjectiveProportion where
 ||| Identity rotation: `(1 : 0 : 0 : 0)`.
 public export
 idProportion : ProjectiveProportion
-idProportion = MkProjectiveProportion (intToBoxInt 1) (intToBoxInt 0) (intToBoxInt 0) (intToBoxInt 0)
+idProportion = MkProjectiveProportion (MkBoxInt 1) (MkBoxInt 0) (MkBoxInt 0) (MkBoxInt 0)
 
 ||| Exact 3D vector cross product `v1 x v2`.
 public export
@@ -83,7 +83,7 @@ rotationMatrixScaled3 (MkProjectiveProportion x t r s) =
       t2 = t * t
       r2 = r * r
       s2 = s * s
-      two = intToBoxInt 2
+      two = MkBoxInt 2
       row1 = [ x2 + t2 - r2 - s2
              , (two * (t * r)) - (two * (x * s))
              , (two * (t * s)) + (two * (x * r))
@@ -117,8 +117,8 @@ rotateVectorScaled p [v1, v2, v3] =
 public export
 meanReflectionScaled3 : Vect 3 (Vect 3 BoxInt)
 meanReflectionScaled3 =
-  let m1 = intToBoxInt (-1)
-      p2 = intToBoxInt 2
+  let m1 = MkBoxInt (-1)
+      p2 = MkBoxInt 2
   in [ [m1, p2, p2]
      , [p2, m1, p2]
      , [p2, p2, m1]
